@@ -2,7 +2,10 @@
 # print("this is a debug message")
 from functools import reduce
 def sum_items(A):
-    return reduce(lambda x,y: x+y,A)
+    if len(A)==0:
+        return 0
+    else:
+        return reduce(lambda x,y: x+y,A)
 
 def solution(K, M, A):
     # K - count of blocks
@@ -11,29 +14,31 @@ def solution(K, M, A):
     blocks = [[]]*K
     A_len = len(A)
     print(A_len)
+    curr_metric = 1000000000000
     flag = True # if false found lowest
-    best = sum_items(A)
-    best_possible = int(best/K)
-    first_size = 1
-    total_sum_best = 100000000000000000000
-    for j in range(K-1):
-        for i in range(1,A_len):
-            print(f"\n\ni:{i}")
-            best_block = A[0:i]
-            rest_block = A[i:]
-            best_block_sum = sum_items(best_block)
-            rest_block_sum = sum_items(rest_block)/(K-1-j)
-            total_sum = best_block_sum + rest_block_sum
-            print(f"best_block:{best_block}\nbest_blokc_sum:{best_block_sum}")
-            print(f"rest_block:{rest_block}\nrest_blokc_sum:{rest_block_sum}")
-            print(f"total = {total_sum}")
-            if total_sum < total_sum_best:
-                total_sum_best = total_sum
-                block_to_sub = i
-                print(f"new block to sub:{block_to_sub}")
-        A = A[block_to_sub:]
-        print(f"\n####\nnew A:{A}")
-        A_len = len(A)
+    for i in range(A_len+1):
+        try:
+            first_block = A[0:i]
+            sum_first_block = sum_items(first_block)
+            avg_first_block = sum_first_block/i
+
+            end_block = A[i:]
+            sum_end_block = sum_items(end_block)
+            avg_end_block = sum_end_block/(A_len-i)
+            metric = avg_first_block/avg_end_block
+
+            print(f"beg :{first_block} :sum {sum_first_block} avg {avg_first_block}")
+            print(f"end :{end_block}  :sum {sum_end_block} avg {avg_end_block}")
+            print(f"{metric}")
+            
+            if metric <curr_metric:
+                curr_metric=metric
+                print(f"current best ={first_block}")
+                best = first_block
+        except:
+            pass
+        print("\n")
+    print(f"best :{best}")
 
 
     return best
