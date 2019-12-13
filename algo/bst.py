@@ -4,7 +4,7 @@ class BST(object):
         self._r = None
         self.root = value
         self._len = 1
-        self.children = 0
+        self.depth = 0
 
 
     def __iter__(self):
@@ -26,14 +26,21 @@ class BST(object):
                 self._r.add(value)
             else:
                 self._r = BST(value)
-                self.children += 1
         if value < self.root:
             if self._l:
                 self._l.add(value)
             else:
                 self._l = BST(value)
-                self.children += 1
     
+    @property
+    def children(self):
+        val = 0
+        if self._l:
+            val +=1
+        if self._r:
+            val +=1
+        return val
+
     def remove(self,value):
         if value in self:
             self._len -= 1
@@ -47,12 +54,10 @@ class BST(object):
                 if self.children == 1:
                     if self._l:
                         self.root = self._l.root
-                        self.children -= 1
                         self._l = None
                         return
                     if self._r:
                         value = self._r.root
-                        self.children -= 1
                         self._r = None
                         return
                 if self.children == 2:
