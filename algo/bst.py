@@ -1,10 +1,11 @@
 class BST(object):
-    def __init__(self,value):
+    def __init__(self,value,level=0):
         self._l = None
         self._r = None
         self.root = value
         self._len = 1
-        self.depth = 0
+        self.depth = level
+        self.height = 0
 
 
     def __iter__(self):
@@ -21,16 +22,21 @@ class BST(object):
 
     def add(self,value):
         self._len += 1
+        child_height =0
         if value > self.root:
             if self._r:
-                self._r.add(value)
+                child_height=self._r.add(value)
             else:
-                self._r = BST(value)
+                self._r = BST(value,self.depth+1)
+                self.height = 1
         if value < self.root:
             if self._l:
-                self._l.add(value)
+                child_height=self._l.add(value)
             else:
-                self._l = BST(value)
+                self._l = BST(value,self.depth+1)
+                self.height = 1
+        self.height = max([child_height,self.height])
+        return self.height+1
     
     @property
     def children(self):
@@ -103,6 +109,7 @@ bst.add(33)
 bst.add(22)
 bst.add(21)
 bst.add(23)
+bst.add(34)
 
 
 for i in bst:
